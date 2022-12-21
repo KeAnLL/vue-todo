@@ -1,45 +1,44 @@
 <template>
-    <div class="flex flex-col">
-        <Icon />
-        <MenuBarItem 
-        v-for="menuItem in items" 
-        :key="menuItem.id"    
-        :menuItemName="menuItem.name"
-        :menuItemSrc="menuItem.icon"  />
-
-    </div>
+  <div class="... flex flex-col">
+    <template class="... inline-flex">
+      <SvgIcon iconName="cursor-arrow-ripple" />
+      <div>TODO List</div>
+    </template>
+    <MenuBarItem
+      v-for="menuItem in items"
+      :key="menuItem.id"
+      :menuItemName="menuItem.name"
+    />
+  </div>
 </template>
 
-<script>
-    import Icon from "../assets/cursor-arrow-ripple.svg"
-    
-    import MenuBarItem from '@/components/MenuBarItem.vue'
+<script lang="ts">
+import { defineComponent } from "vue";
 
-    export default {
-        components: {
-            Icon,
-            MenuBarItem,
-        },  
-        data() {
-            return {
-                items: [
-                    {
-                        id: 1,
-                        name: "bookmark",
-                        title: "Bookmark",
-                        icon: "@/assets/bookmark.svg"
-                    },
-                    {
-                        id: 2,
-                        name: "sign-in",
-                        title: "Sign In",
-                        icon: "@/assets/sign-in.svg"
-                    }
-                ]
-            }
+import SvgIcon from "@/utils/SvgIcon.vue";
+import MenuBarItem from "@/components/MenuBarItem.vue";
+
+export default defineComponent({
+  components: {
+    SvgIcon,
+    MenuBarItem,
+  },
+  data() {
+    return {
+      items: [
+        {
+          id: 1,
+          name: "bookmark",
+          title: "Bookmark",
         },
-        setup() {
-            
+        {
+          id: 2,
+          name: "sign-in",
+          title: "Sign In",
         },
-    }
+      ],
+    };
+  },
+  setup() {},
+});
 </script>

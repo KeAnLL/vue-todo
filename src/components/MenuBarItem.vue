@@ -1,18 +1,25 @@
 <template>
-    <div class="inline-flex">
-        <img :src="menuItemSrc" />
-        <span>{{ menuName }}</span>
-    </div>
+  <div class="inline-flex">
+    <SvgIcon :iconName="menuItemName" />
+    <span>{{ menuItemName }}</span>
+  </div>
 </template>
 
-<script>
-    export default {
-        props: {
-            menuItemName: String,
-            menuItemSrc: String,
-        },
-        setup() {
-            
-        },
-    }
+<script lang="ts">
+import { defineComponent } from "vue";
+
+import SvgIcon from "@/utils/SvgIcon.vue";
+
+export default defineComponent({
+  props: {
+    menuItemName: {
+      type: String,
+      required: true,
+    },
+  },
+  components: {
+    SvgIcon,
+  },
+  setup() {},
+});
 </script>

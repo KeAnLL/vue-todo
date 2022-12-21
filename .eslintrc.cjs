@@ -6,6 +6,7 @@ module.exports = {
   extends: [
     "plugin:vue/vue3-essential",
     "eslint:recommended",
+    "@vue/eslint-config-typescript",
     "@vue/eslint-config-prettier",
   ],
   parserOptions: {
@@ -13,8 +14,6 @@ module.exports = {
   },
   env: {
     browser: true,
-    module: true,
-    amd: true,
     node: true,
-  }
+  },
 };
