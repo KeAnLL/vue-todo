@@ -1,44 +1,34 @@
 <template>
-  <div class="... flex flex-col">
-    <template class="... inline-flex">
-      <SvgIcon iconName="cursor-arrow-ripple" />
-      <div>TODO List</div>
+  <div class="h-screen flex flex-col content-center justify-start bg-zinc-700 text-[#fafaf9] ...">
+    <template class="inline-flex h-fit w-fit ...">
+      <div class="p-4" :class="$style.icontext">TODO</div>
     </template>
-    <MenuBarItem
-      v-for="menuItem in items"
-      :key="menuItem.id"
-      :menuItemName="menuItem.name"
-    />
+      <MenuBarItem v-for="menuItem in items" :key="menuItem.id" :menuItemName="menuItem.name" />
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
-import SvgIcon from "@/utils/SvgIcon.vue";
+<script setup lang="ts">
 import MenuBarItem from "@/components/MenuBarItem.vue";
 
-export default defineComponent({
-  components: {
-    SvgIcon,
-    MenuBarItem,
+const items = [
+  {
+    id: 1,
+    name: "bookmark",
+    title: "Bookmark",
   },
-  data() {
-    return {
-      items: [
-        {
-          id: 1,
-          name: "bookmark",
-          title: "Bookmark",
-        },
-        {
-          id: 2,
-          name: "sign-in",
-          title: "Sign In",
-        },
-      ],
-    };
+  {
+    id: 2,
+    name: "sign-in",
+    title: "Sign In",
   },
-  setup() {},
-});
+]
 </script>
+
+<style module>
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+
+.icontext {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 20px;
+}
+</style>

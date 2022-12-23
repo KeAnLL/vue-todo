@@ -1,25 +1,18 @@
 <template>
-  <div class="inline-flex">
-    <SvgIcon :iconName="menuItemName" />
-    <span>{{ menuItemName }}</span>
-  </div>
+  <!-- <router-link :to="routerLink"> -->
+  <SvgIcon componentDirName="dashboard" :iconName="menuItemName" class="p-4" />
+  <!-- </router-link> -->
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import SvgIcon from "@/components/SvgIcon.vue";
 
-import SvgIcon from "@/utils/SvgIcon.vue";
-
-export default defineComponent({
-  props: {
-    menuItemName: {
-      type: String,
-      required: true,
-    },
+const props = defineProps({
+  menuItemName: {
+    type: String,
+    required: true,
   },
-  components: {
-    SvgIcon,
-  },
-  setup() {},
 });
+
+const routerLink = `/${props.menuItemName}`;
 </script>
