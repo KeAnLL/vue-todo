@@ -1,8 +1,7 @@
 <template>
-  <div id="vue-app" class="bg-secondary-300 ...">
+  <div id="vue-app" class="... bg-white">
     <router-view></router-view>
   </div>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
