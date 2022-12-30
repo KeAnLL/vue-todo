@@ -1,6 +1,6 @@
 <template>
   <div
-    class="m-4 flex items-center text-[30px] text-primary"
+    class="flex items-center text-[30px] text-primary"
     :class="$style.icontext"
   >
     <AppSvgIcon

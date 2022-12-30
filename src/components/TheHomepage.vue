@@ -15,7 +15,7 @@
       <div>
         <p class="whitespace-normal text-[48px]" :class="$style['main-banner']">
           The fast way to record down your
-          <span class="text-primary"> todo items </span>📝
+          <span class="text-secondary"> todo items </span>📝
         </p>
         <p class="pt-5 text-[24px]" :class="$style['main-banner-sub']">
           Everything you need to store and manage all your tasks and make the

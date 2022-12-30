@@ -20,6 +20,7 @@ const svgUrl = `/src/assets/svg/${subDirectory(props.componentDirName)}${
   props.iconName
 }.svg`;
 
+/* reference from https://vitejs.dev/guide/assets.html */
 const imageUrl = new URL(svgUrl, import.meta.url).href;
 </script>
 
