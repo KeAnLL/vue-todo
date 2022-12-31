@@ -22,7 +22,8 @@
       <div id="new" class="flex w-4/6 justify-end pr-3">
         <button
           class="justify-right mb-5 h-fit w-fit rounded-lg bg-secondary pt-3 pb-3 pl-6 pr-4 text-base font-bold transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:border-2 hover:border-secondary hover:bg-white"
-        >
+          @click="updateSignUp"
+          >
           <div class="inline-flex items-center justify-center">
             <span class="mr-1">I'm new</span>
             <AppSvgIcon
@@ -82,8 +83,7 @@
             class="mr-2 h-8 w-8"
             :class="{ hidden: !data.loading }"
           />
-          <span class="mr-1" v-if="data.signup === true">Sign up</span>
-          <span class="mr-1" v-else>Sign in</span>
+          <span class="mr-1">{{ formButtonText.text }}</span>
           <AppSvgIcon
             componentDirName="account"
             iconName="cursor-arrow-ray"
@@ -97,12 +97,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 
 import AppSvgIcon from "@/components/AppSvgIcon.vue";
 import InputFieldWithIcon from "./InputFieldWithIcon.vue";
 import TheLoadingSpinner from "./TheLoadingSpinner.vue";
 import TheLogo from "./TheLogo.vue";
+
+const formButtonText = reactive({
+  text: "Sign up",
+});
 
 const email = ref<string>("");
 const password = ref<string>("");
@@ -115,6 +119,7 @@ const data = {
 
 const updateSignUp = () => {
   data.signup = !data.signup;
+  formButtonText.text = data.signup === true ? "Sign up" : "Sign in";
 };
 </script>
 
