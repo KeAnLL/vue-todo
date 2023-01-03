@@ -1,8 +1,8 @@
 <template>
-  <label name="email" class="text-m block font-medium text-gray-700">
+  <label name="email" class="block text-lg font-medium text-gray-700">
     {{ props.labelName }}
   </label>
-  <div class="relative rounded-md shadow-sm">
+  <div id="input-field" class="relative rounded-md shadow-sm">
     <div
       class="pointer-events-none absolute inset-y-0 left-0 flex items-center"
     >
@@ -16,12 +16,21 @@
       :type="props.inputType"
       :placeholder="props.placeholder"
       class="block w-full rounded-md border border-gray-300 pl-8 pb-1 pt-0.5"
+      v-model.lazy="value"
     />
+    <div class="absolute inset-y-0 right-0 flex items-center">
+      <slot name="tooltip"></slot>
+    </div>
   </div>
+  <slot name="warning"></slot>
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from "vue";
+
 import AppSvgIcon from "./AppSvgIcon.vue";
+
+const value = ref<string>("");
 
 const props = defineProps({
   from: {
@@ -44,5 +53,13 @@ const props = defineProps({
     type: String,
     required: true,
   },
+});
+
+const emit = defineEmits<{
+  (e: "change", value: string): void;
+}>();
+
+watch(value, (newValue) => {
+  emit("change", newValue);
 });
 </script>
