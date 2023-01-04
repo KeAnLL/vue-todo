@@ -1,5 +1,5 @@
 <template>
-  <label name="email" class="block text-lg font-medium text-gray-700">
+  <label class="block text-base font-medium text-gray-700">
     {{ props.labelName }}
   </label>
   <div id="input-field" class="relative rounded-md shadow-sm">

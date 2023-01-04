@@ -1,28 +1,34 @@
 <template>
   <div class="h-screen w-screen bg-gray-100">
-    <div
+    <form
+      ref="form"
       id="form-container"
       class="flex h-full flex-col items-center justify-center"
     >
       <div class="flex w-4/6 flex-col items-center pb-8">
         <TheLogo :height="40" class="pb-5 text-[40px]" />
-        <div class="mb-2 text-5xl font-bold text-primary">Welcome here!</div>
-        <span class="text-2xl font-semibold italic text-secondary"
-          >Meet the greatest todo app of all time</span
-        >
+        <div class="mb-2 text-5xl font-bold text-primary">
+          <span v-if="!data.signin"> Welcome here! </span>
+          <span v-else>Welcome back!</span>
+        </div>
+        <span class="text-2xl font-semibold italic text-secondary">
+          <span v-if="!data.signin"
+            >Meet the greatest todo app of all time</span
+          >
+          <span v-else>Carry on, mate!</span>
+        </span>
       </div>
       <div
         id="form-card"
         class="flex w-[30vw] flex-col items-center rounded-xl bg-white pt-10 pb-8 pl-16 pr-16 drop-shadow-lg"
       >
-        <div class="w-full">
+        <div id="email-input" class="w-full pb-1.5">
           <InputFieldWithIcon
             from="account"
             labelName="Email address"
-            iconName="envelope"
+            iconName="at"
             inputType="email"
             placeholder="youremail@example.com"
-            class="pb-1.5"
             @change="(newEmail) => (email = newEmail)"
           >
             <template #warning>
@@ -34,7 +40,7 @@
             </template>
           </InputFieldWithIcon>
         </div>
-        <div class="w-full">
+        <div id="password-input" class="w-full pb-1.5">
           <InputFieldWithIcon
             from="account"
             labelName="Password"
@@ -68,14 +74,14 @@
             </template>
           </InputFieldWithIcon>
         </div>
-        <div class="w-full">
+        <div id="confirm-password-input" class="w-full pb-1.5">
           <InputFieldWithIcon
             from="account"
             labelName="Confirm password"
-            iconName="lock"
+            iconName="lock-solid"
             :inputType="account.passwordField.type"
             placeholder="************"
-            v-if="data.signup === true"
+            v-if="!data.signin"
             @change="
               (newConfirmPassword) => (confirmPassword = newConfirmPassword)
             "
@@ -105,9 +111,29 @@
             </template>
           </InputFieldWithIcon>
         </div>
+        <div
+          id="form-options"
+          class="relative mt-2 mb-5 w-full text-sm"
+          v-if="data.signin"
+        >
+          <div
+            class="absolute inset-y-0 left-0 flex flex-row items-center pl-1"
+          >
+            <input
+              type="checkbox"
+              class="mr-1.5 rounded checked:text-secondary focus:ring-secondary"
+            />
+            <label name="remember" class="text-gray-700">Remember me</label>
+          </div>
+          <div
+            class="absolute inset-y-0 right-0 flex items-center font-medium text-secondary"
+          >
+            Forgot password
+          </div>
+        </div>
         <button
-          class="mt-5 mb-5 h-fit w-full rounded-lg bg-secondary pt-3 pb-3 pl-7 pr-5 text-lg font-bold text-white"
-          @click="test"
+          class="mt-3 mb-2 h-fit w-full rounded-lg bg-secondary pt-3 pb-3 pl-7 pr-5 text-lg font-bold text-white"
+          @click="test()"
         >
           <div class="inline-flex items-center justify-center">
             <TheLoadingSpinner
@@ -115,7 +141,7 @@
               class="mr-2 h-8 w-8"
               :class="{ hidden: !data.loading }"
             />
-            <span class="mr-1">Sign up</span>
+            <span class="mr-1">{{ account.action }}</span>
             <AppSvgIcon
               componentDirName="account"
               iconName="cursor-arrow-ray"
@@ -125,7 +151,25 @@
           </div>
         </button>
       </div>
-    </div>
+      <div id="action-link" class="pt-3 font-medium">
+        <div v-if="data.signin">
+          Don't have an account yet?
+          <span
+            class="cursor-pointer text-secondary hover:underline"
+            @click="changeAction()"
+            >Sign up</span
+          >
+          now!
+        </div>
+        <div
+          class="cursor-pointer text-secondary hover:underline"
+          @click="changeAction()"
+          v-else
+        >
+          Sign in instead
+        </div>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -139,6 +183,7 @@ import TheLoadingSpinner from "@/components/TheLoadingSpinner.vue";
 import TheLogo from "./TheLogo.vue";
 
 const account = reactive({
+  action: "Sign in",
   warnings: {
     emailWarning: false,
     passwordWarning: false,
@@ -150,21 +195,28 @@ const account = reactive({
   },
 });
 
-
 const email = ref<string>("");
 const password = ref<string>("");
 const confirmPassword = ref<string>("");
 
 const data = {
-  signup: true,
+  signin: true,
   loading: false,
 };
 
 const updateVisibility = () => {
   account.passwordField.visible = !account.passwordField.visible;
   account.passwordField.type = account.passwordField.visible
-  ? "text"
-  : "password";
+    ? "text"
+    : "password";
+};
+
+const changeAction = () => {
+  data.signin = !data.signin;
+  account.action = data.signin ? "Sign in" : "Sign up";
+  account.warnings.emailWarning = false;
+  account.warnings.passwordWarning = false;
+  account.warnings.confirmPasswordWarning = false;
 };
 
 const test = () => {

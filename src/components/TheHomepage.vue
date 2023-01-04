@@ -1,8 +1,8 @@
 <template>
   <div id="navbar" class="flex flex-row justify-between">
-    <TheLogo />
+    <TheLogo class="ml-3" />
     <button
-      class="m-3 min-w-fit rounded-lg bg-primary pl-6 pr-6 text-lg font-bold text-white"
+      class="m-3 min-w-fit rounded-lg bg-primary pt-2 pb-2 pl-6 pr-6 text-lg font-bold text-white"
     >
       Get started
     </button>
