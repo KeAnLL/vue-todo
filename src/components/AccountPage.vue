@@ -122,6 +122,7 @@
             <input
               type="checkbox"
               class="mr-1.5 rounded checked:text-secondary focus:ring-secondary"
+              v-model="rememberMe"
             />
             <label name="remember" class="text-gray-700">Remember me</label>
           </div>
@@ -175,6 +176,7 @@
 
 <script setup lang="ts">
 import { reactive, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 import AppSvgIcon from "@/components/AppSvgIcon.vue";
 import InputFieldWarning from "@/components/InputFieldWarning.vue";
@@ -182,8 +184,16 @@ import InputFieldWithIcon from "@/components/InputFieldWithIcon.vue";
 import TheLoadingSpinner from "@/components/TheLoadingSpinner.vue";
 import TheLogo from "./TheLogo.vue";
 
+const router = useRouter();
+const route = useRoute();
+
+const data = {
+  signin: route.params.type === "signin",
+  loading: false,
+};
+
 const account = reactive({
-  action: "Sign in",
+  action: data.signin ? "Sign in" : "Sign up",
   warnings: {
     emailWarning: false,
     passwordWarning: false,
@@ -198,11 +208,7 @@ const account = reactive({
 const email = ref<string>("");
 const password = ref<string>("");
 const confirmPassword = ref<string>("");
-
-const data = {
-  signin: true,
-  loading: false,
-};
+const rememberMe = ref<boolean>(false);
 
 const updateVisibility = () => {
   account.passwordField.visible = !account.passwordField.visible;
@@ -213,10 +219,14 @@ const updateVisibility = () => {
 
 const changeAction = () => {
   data.signin = !data.signin;
-  account.action = data.signin ? "Sign in" : "Sign up";
-  account.warnings.emailWarning = false;
-  account.warnings.passwordWarning = false;
-  account.warnings.confirmPasswordWarning = false;
+  router.replace({
+    name: "Account",
+    params: { type: data.signin ? "signin" : "signup" },
+  });
+  // account.action = data.signin ? "Sign in" : "Sign up";
+  // account.warnings.emailWarning = false;
+  // account.warnings.passwordWarning = false;
+  // account.warnings.confirmPasswordWarning = false;
 };
 
 const test = () => {
@@ -247,7 +257,7 @@ watch(password, (newPassword) => {
   const pwd_regex =
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
 
-  if (_pwd.size >= 8) {
+  if (_pwd.size >= 6) {
     if (pwd_regex.test(newPassword)) {
       account.warnings.passwordWarning = false;
       if (confirmPassword.value.length > 0) {

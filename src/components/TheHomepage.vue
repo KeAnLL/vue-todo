@@ -3,6 +3,7 @@
     <TheLogo class="ml-3" />
     <button
       class="m-3 min-w-fit rounded-lg bg-primary pt-2 pb-2 pl-6 pr-6 text-lg font-bold text-white"
+      @click="directToSignUp()"
     >
       Get started
     </button>
@@ -23,6 +24,7 @@
         </p>
         <button
           class="mt-5 min-w-fit rounded-lg bg-primary pt-4 pb-4 pl-6 pr-6 text-lg font-bold text-white"
+          @click="directToSignUp()"
         >
           Sign up for free
         </button>
@@ -64,8 +66,20 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from "vue-router";
+
 import SvgIcon from "@/components/AppSvgIcon.vue";
 import TheLogo from "@/components/TheLogo.vue";
+
+const router = useRouter();
+
+const directToSignUp = () => {
+  router.push({
+          name: 'Account',
+          params: { type: 'signup' },
+        })
+      
+}
 </script>
 
 <style module>

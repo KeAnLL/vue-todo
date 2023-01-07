@@ -1,22 +1,21 @@
 <template>
-  <router-link :to="routerLink">
-    <SvgIcon
-      componentDirName="dashboard"
-      :iconName="menuItemName"
-      class="p-4"
-    />
-  </router-link>
+  <div class="inline-flex items-center">
+    <Icon class="h-[1.3rem] w-auto pr-1.5" />
+    <slot></slot>
+  </div>
 </template>
 
 <script setup lang="ts">
-import SvgIcon from "@/components/AppSvgIcon.vue";
+import { defineAsyncComponent } from "vue";
 
 const props = defineProps({
-  menuItemName: {
+  iconName: {
     type: String,
     required: true,
   },
 });
 
-const routerLink = `/${props.menuItemName}`;
+const Icon = defineAsyncComponent(
+  () => import(`@/components/icons/Icon${props.iconName}.vue`)
+);
 </script>

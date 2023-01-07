@@ -3,7 +3,9 @@
     class="flex h-screen w-screen flex-col items-center justify-center bg-gray-100"
   >
     <div class="pb-5 text-5xl" :class="$style['main-header']">
-      <span class="text-primary border-r-2 border-gray-300 pr-5">404</span><span class="pl-4">Page Not Found</span>
+      <span class="border-r-2 border-gray-300 pr-5 font-semibold text-primary"
+        >404</span
+      ><span class="pl-4">Page Not Found</span>
     </div>
     <div class="inline-flex pr-3 text-base font-medium">
       <AppSvgIcon iconName="wrench-screwdriver" class="h-6 w-auto pr-2" />
@@ -13,6 +15,7 @@
     </div>
     <button
       class="mt-10 inline-flex items-center rounded-md bg-secondary pl-5 pr-6 pt-2 pb-2 text-lg font-medium text-white"
+      @click="router.push('/')"
     >
       <AppSvgIcon iconName="arrow-circle-left" class="h-6 w-auto pr-2" />Go back
       to Homepage
@@ -21,7 +24,11 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from "vue-router";
+
 import AppSvgIcon from "./AppSvgIcon.vue";
+
+const router = useRouter();
 </script>
 
 <style module>
