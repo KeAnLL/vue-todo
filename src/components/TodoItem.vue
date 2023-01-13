@@ -1,9 +1,8 @@
 <template>
   <div
     id="item-container"
-    class="flex flex-row items-center rounded-lg bg-white px-5 py-4"
+    class="my-2 flex flex-row items-center rounded-lg bg-white px-5 py-4"
   >
-    <slot></slot>
     <div class="pl-3 pr-6">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -11,10 +10,10 @@
         viewBox="0 0 24 24"
         stroke-width="1.5"
         stroke="currentColor"
-        @click="() => (todo.selected = !todo.selected)"
+        @click="() => (todo.completed = !todo.completed)"
         class="h-8 w-8 transition duration-100 ease-in-out hover:scale-125"
         :class="{
-          'stroke-green-500 stroke-2': todo.selected,
+          'stroke-green-500 stroke-2': todo.completed,
         }"
       >
         <path
@@ -25,8 +24,8 @@
       </svg>
     </div>
     <div id="details" class="grow">
-      <div id="todo-title" class="font-semibold">Title placeholder</div>
-      <div id="description">Todo item description placeholder</div>
+      <div id="title" class="font-semibold"><slot name="title"></slot></div>
+      <div id="description"><slot name="description"></slot></div>
     </div>
   </div>
 </template>
@@ -34,7 +33,14 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 
+const props = defineProps({
+  completed: {
+    type: Boolean,
+    required: true,
+  },
+});
+
 const todo = reactive({
-  selected: false,
+  completed: false,
 });
 </script>

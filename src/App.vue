@@ -1,6 +1,11 @@
 <template>
   <div id="vue-app" class="... bg-white">
-    <router-view></router-view>
+    <Suspense>
+      <router-view></router-view>
+      <template #fallback>
+        <div>Loading...</div>
+      </template>
+    </Suspense>
   </div>
 </template>
 

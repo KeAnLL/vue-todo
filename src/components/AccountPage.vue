@@ -1,18 +1,17 @@
 <template>
   <div class="h-screen w-screen bg-gray-100">
-    <form
-      ref="form"
+    <div
       id="form-container"
-      class="flex h-full flex-col items-center justify-center"
+      class="flex h-full flex-col items-center justify-center text-sm sm:text-base"
     >
-      <div class="flex w-4/6 flex-col items-center pb-8">
+      <div class="flex w-4/6 flex-col items-center pb-8 text-center">
         <TheLogo :height="40" class="pb-5 text-[40px]" />
-        <div class="mb-2 text-5xl font-bold text-primary">
-          <span v-if="!data.signin"> Welcome here! </span>
+        <div class="mb-2 text-3xl font-bold text-primary sm:text-5xl">
+          <span v-if="!accountData.signin"> Welcome here! </span>
           <span v-else>Welcome back!</span>
         </div>
-        <span class="text-2xl font-semibold italic text-secondary">
-          <span v-if="!data.signin"
+        <span class="text:lg font-semibold italic text-secondary sm:text-2xl">
+          <span v-if="!accountData.signin"
             >Meet the greatest todo app of all time</span
           >
           <span v-else>Carry on, mate!</span>
@@ -20,7 +19,7 @@
       </div>
       <div
         id="form-card"
-        class="flex w-[30vw] flex-col items-center rounded-xl bg-white pt-10 pb-8 pl-16 pr-16 drop-shadow-lg"
+        class="flex w-[70vw] flex-col items-center rounded-xl bg-white px-6 pt-10 pb-8 drop-shadow-lg sm:px-16 lg:w-[50vw] xl:w-[35vw]"
       >
         <div id="email-input" class="w-full pb-1.5">
           <InputFieldWithIcon
@@ -81,7 +80,7 @@
             iconName="lock-solid"
             :inputType="account.passwordField.type"
             placeholder="************"
-            v-if="!data.signin"
+            v-if="!accountData.signin"
             @change="
               (newConfirmPassword) => (confirmPassword = newConfirmPassword)
             "
@@ -113,8 +112,8 @@
         </div>
         <div
           id="form-options"
-          class="relative mt-2 mb-5 w-full text-sm"
-          v-if="data.signin"
+          class="text relative mt-2 mb-5 w-full text-xs sm:text-sm"
+          v-if="accountData.signin"
         >
           <div
             class="absolute inset-y-0 left-0 flex flex-row items-center pl-1"
@@ -134,26 +133,26 @@
         </div>
         <button
           class="mt-3 mb-2 h-fit w-full rounded-lg bg-secondary pt-3 pb-3 pl-7 pr-5 text-lg font-bold text-white"
-          @click="test()"
+          @click="accountSubmitAction()"
         >
           <div class="inline-flex items-center justify-center">
             <TheLoadingSpinner
               role="status"
               class="mr-2 h-8 w-8"
-              :class="{ hidden: !data.loading }"
+              :class="{ hidden: !accountData.loading }"
             />
             <span class="mr-1">{{ account.action }}</span>
             <AppSvgIcon
               componentDirName="account"
               iconName="cursor-arrow-ray"
               class="h-[30px] w-auto"
-              :class="{ hidden: data.loading }"
+              :class="{ hidden: accountData.loading }"
             />
           </div>
         </button>
       </div>
       <div id="action-link" class="pt-3 font-medium">
-        <div v-if="data.signin">
+        <div v-if="accountData.signin">
           Don't have an account yet?
           <span
             class="cursor-pointer text-secondary hover:underline"
@@ -170,7 +169,18 @@
           Sign in instead
         </div>
       </div>
-    </form>
+    </div>
+    <AppModal
+      @close="() => (account.fallbackError.flag = false)"
+      :class="{
+        hidden: !account.fallbackError.flag,
+      }"
+    >
+      <template #title
+        >{{ account.fallbackError.fatal ? "Fatal " : "" }}Error</template
+      >
+      <template #description>{{ account.fallbackError.msg }}</template>
+    </AppModal>
   </div>
 </template>
 
@@ -178,22 +188,31 @@
 import { reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import { isAuthErrorMessage, type Credentials } from "@/types/global";
+
+import {
+  handleSignIn,
+  handleSignUp,
+  retrieveSession,
+} from "@/vueutils/useAuth";
+
 import AppSvgIcon from "@/components/AppSvgIcon.vue";
 import InputFieldWarning from "@/components/InputFieldWarning.vue";
 import InputFieldWithIcon from "@/components/InputFieldWithIcon.vue";
 import TheLoadingSpinner from "@/components/TheLoadingSpinner.vue";
+import AppModal from "./AppModal.vue";
 import TheLogo from "./TheLogo.vue";
 
 const router = useRouter();
 const route = useRoute();
 
-const data = {
+const accountData = {
   signin: route.params.type === "signin",
   loading: false,
 };
 
 const account = reactive({
-  action: data.signin ? "Sign in" : "Sign up",
+  action: accountData.signin ? "Sign in" : "Sign up",
   warnings: {
     emailWarning: false,
     passwordWarning: false,
@@ -202,6 +221,11 @@ const account = reactive({
   passwordField: {
     visible: false,
     type: "password",
+  },
+  fallbackError: {
+    flag: false,
+    fatal: false,
+    msg: "",
   },
 });
 
@@ -218,21 +242,44 @@ const updateVisibility = () => {
 };
 
 const changeAction = () => {
-  data.signin = !data.signin;
+  accountData.signin = !accountData.signin;
+  account.action = accountData.signin ? "Sign in" : "Sign up";
   router.replace({
     name: "Account",
-    params: { type: data.signin ? "signin" : "signup" },
+    params: { type: accountData.signin ? "signin" : "signup" },
   });
-  // account.action = data.signin ? "Sign in" : "Sign up";
-  // account.warnings.emailWarning = false;
-  // account.warnings.passwordWarning = false;
-  // account.warnings.confirmPasswordWarning = false;
 };
 
 const test = () => {
   console.log(email.value);
   console.log(password.value);
   console.log(confirmPassword.value);
+};
+
+const accountSubmitAction = async () => {
+  const credential: Credentials = {
+    email: email.value,
+    password: password.value,
+  };
+
+  const data = await (route.params.type === "signin"
+    ? handleSignIn(credential)
+    : handleSignUp(credential));
+
+  if (isAuthErrorMessage(data)) {
+    account.fallbackError = {
+      flag: true,
+      fatal: data.fatal === true,
+      msg: data.msg,
+    };
+  } else {
+    if (accountData.signin) {
+      const session = await retrieveSession();
+      router.push(`/todo/${session.user?.id}`);
+    } else {
+      router.push(`/user/confirmation?mail=${email.value}`);
+    }
+  }
 };
 
 watch(email, (newEmail, oldEmail) => {
@@ -260,6 +307,7 @@ watch(password, (newPassword) => {
   if (_pwd.size >= 6) {
     if (pwd_regex.test(newPassword)) {
       account.warnings.passwordWarning = false;
+      console.log("Password ok");
       if (confirmPassword.value.length > 0) {
         account.warnings.confirmPasswordWarning = true;
       }

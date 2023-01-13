@@ -1,8 +1,11 @@
 <template>
-  <label class="block text-base font-medium text-gray-700">
+  <label class="block text-sm font-medium text-gray-700 sm:text-base">
     {{ props.labelName }}
   </label>
-  <div id="input-field" class="relative rounded-md shadow-sm">
+  <div
+    id="input-field"
+    class="relative rounded-md text-sm shadow-sm sm:text-base"
+  >
     <div
       class="pointer-events-none absolute inset-y-0 left-0 flex items-center"
     >
@@ -15,7 +18,7 @@
     <input
       :type="props.inputType"
       :placeholder="props.placeholder"
-      class="block w-full rounded-md border border-gray-300 pl-8 pb-1 pt-0.5"
+      class="block w-full rounded-md border border-gray-300 pl-8 pb-1 pt-0.5 placeholder:text-sm placeholder:sm:text-base"
       v-model.lazy="value"
     />
     <div class="absolute inset-y-0 right-0 flex items-center">

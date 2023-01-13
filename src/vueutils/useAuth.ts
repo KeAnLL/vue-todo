@@ -1,4 +1,4 @@
-import type { Credentials } from "@/types/global";
+import type { AuthData, AuthErrorMessage, Credentials } from "@/types/global";
 import type { AuthResponse, Session } from "@supabase/gotrue-js";
 
 import { ref } from "vue";
@@ -11,7 +11,9 @@ import {
 
 const userSession = ref<Session | null>(null);
 
-const handleSignIn = async (credentials: Credentials) => {
+const handleSignIn = async (
+  credentials: Credentials
+): Promise<AuthData | AuthErrorMessage> => {
   try {
     if (!credentials.email) throw new UndefinedUserEmailError();
     if (!credentials.password) throw new UndefinedUserPasswordError();
@@ -23,19 +25,33 @@ const handleSignIn = async (credentials: Credentials) => {
       });
 
     if (error) {
-      alert(`Error logging in: ${error.message}`);
+      // alert(`Error logging in: ${error.message}`);
+      return {
+        msg: error.message,
+      };
     }
 
     if (!error && !data.user) {
-      alert("Check your email for the login link");
+      // alert("Check your email for the login link");
+      return {
+        msg: "Check your email for the login link",
+      };
     }
+
+    return data;
   } catch (error: any) {
     console.error("Error thrown: ", error.message);
-    alert(error);
+    // alert(error);
+    return {
+      fatal: true,
+      msg: error.message,
+    };
   }
 };
 
-const handleSignUp = async (credentials: Credentials) => {
+const handleSignUp = async (
+  credentials: Credentials
+): Promise<AuthData | AuthErrorMessage> => {
   try {
     if (!credentials.email) throw new UndefinedUserEmailError();
     if (!credentials.password) throw new UndefinedUserPasswordError();
@@ -43,31 +59,25 @@ const handleSignUp = async (credentials: Credentials) => {
     const { data, error } = await supabase.auth.signUp({
       email: credentials.email,
       password: credentials.password,
-      options: {
-        data: {},
-      },
     });
 
     if (error) {
-      alert(error.message);
-      console.error(error, error.message);
-      return /* Something here */;
-    } else {
-      /* TODO */
-      console.debug(data);
+      // alert(error.message);
+      console.error("Error:", error.message);
+      return {
+        msg: error.message,
+      };
     }
 
+    return data;
     /* Signup successfully, confirmation email should be sent */
-  } catch (error) {
-    if (
-      error instanceof UndefinedUserEmailError ||
-      error instanceof UndefinedUserPasswordError
-    ) {
-      return /* Something here */;
-    } else {
-      alert("Fatal error signing up");
-      console.error("signup error: ", error);
-    }
+  } catch (error: any) {
+    // alert("Fatal error signing up");
+    console.error("signup error: ", error);
+    return {
+      fatal: true,
+      msg: error.message,
+    };
   }
 };
 
@@ -85,4 +95,18 @@ const handleSignOut = async () => {
   }
 };
 
-export { userSession, handleSignIn, handleSignUp, handleSignOut };
+const retrieveSession = async (): Promise<Session | null> => {
+  const { data, error } = await supabase.auth.getSession();
+  if (error) {
+    console.error("Error when retrieving user session:", error);
+  }
+  return data.session;
+};
+
+export {
+  userSession,
+  handleSignIn,
+  handleSignUp,
+  handleSignOut,
+  retrieveSession,
+};

@@ -7,15 +7,18 @@ import {
 
 import AccountPage from "@/components/AccountPage.vue";
 import TheHomepage from "@/components/TheHomepage.vue";
+import TheNotFoundPage from "@/components/TheNotFoundPage.vue";
 import TodoPage from "@/components/TodoPage.vue";
-import TheNotFoundPage from "./components/TheNotFoundPage.vue";
+import UserConfirmationPage from "@/components/UserConfirmationPage.vue";
+import UserPage from "@/components/UserPage.vue";
+import UserProfilePage from "@/components/UserProfilePage.vue";
 
 import App from "./App.vue";
 
 import "./main.css";
 
 const accountGuard = (to: RouteLocationNormalized) => {
-  const params: string[] = ["signin", "signup"];
+  const params: string[] = ["signin", "signup", "confirm"];
   const dest: string | string[] = to.params.type;
 
   if (typeof dest === "object") {
@@ -33,8 +36,21 @@ const routes = [
     component: AccountPage,
     beforeEnter: [accountGuard],
   },
-  // { path: "/todo/profile/:userid" }
-  { path: "/todo/:userid", name: "Dashboard", component: TodoPage },
+  {
+    path: "/user",
+    component: UserPage,
+    children: [
+      {
+        path: "confirmation",
+        component: UserConfirmationPage,
+      },
+      {
+        path: ":id/profile",
+        component: UserProfilePage,
+      },
+    ],
+  },
+  { path: "/todo/:userid?", name: "Dashboard", component: TodoPage },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: TheNotFoundPage },
   { path: "/:pathMatch(.*)", name: "BadNotFound", component: TheNotFoundPage },
 ];

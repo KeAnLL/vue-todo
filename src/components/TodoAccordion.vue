@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="accordion-container">
     <div
       id="accordion-header"
       class="rounded-t-lg bg-white px-6 py-3"
@@ -9,9 +9,17 @@
     >
       <button
         @click="() => (accordion.collapse = !accordion.collapse)"
-        class="inline-flex w-full justify-between text-left font-bold"
+        class="inline-flex w-full justify-between text-left items-center"
       >
-        Accordion title placefolder
+        <div id="header-title">
+          <span id="title" class="text-lg font-bold"
+            >Accordion title placefolder</span
+          >
+          <div id="description" class="text-sm font-semibold">
+            Todo item description placeholder
+          </div>
+        </div>
+
         <div
           class="flex h-8 w-8 place-content-center items-center rounded-full hover:bg-gray-100"
         >
@@ -37,10 +45,10 @@
         hidden: accordion.collapse,
       }"
     >
-      <div id="accordion-item" ref="ac" class="py-1.5 pl-10 pr-5">
+      <div id="accordion-item" ref="ac" class="pl-10 pr-5">
         <TodoItem></TodoItem>
       </div>
-      <div id="accordion-item" ref="ac" class="py-1.5 pl-10 pr-5">
+      <div id="accordion-item" ref="ac" class="pl-10 pr-5">
         <TodoItem></TodoItem>
       </div>
     </div>
