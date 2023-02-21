@@ -5,6 +5,34 @@
       <MenuBar @update="(selected) => (todo.selected = selected)" />
     </nav>
     <div class="container bg-gray-100">
+      <AppModal ref="modal" />
+      <TodoSlideOverPanel ref="panel" @submit="submitSection()">
+        <template #dialog-title>Add new section</template>
+        <template #dialog-description
+          >Get started by filling the information below to create a new section
+          for your todo list</template
+        >
+        <template #dialog-body>
+          <div class="flex flex-col gap-4 px-4 text-base">
+            <div>
+              <label class="block pb-1 font-medium">Section name</label>
+              <input
+                type="text"
+                v-model.lazy="sectionName"
+                class="w-full rounded-lg border-gray-400 px-1 py-0.5 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-0"
+              />
+            </div>
+            <div>
+              <label class="block pb-1 font-medium">Section description</label>
+              <textarea
+                v-model.lazy="sectionDescription"
+                class="h-28 w-full rounded-lg border-gray-400 px-1 py-0.5 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-0"
+              ></textarea>
+            </div>
+          </div>
+        </template>
+        <template #dialog-button>Add section</template>
+      </TodoSlideOverPanel>
       <div
         id="selected-top-banner"
         class="flex w-full flex-row items-center justify-between px-10 py-5 text-center font-semibold text-gray-500"
@@ -26,17 +54,30 @@
         </div>
       </div>
       <div id="todo-container" class="px-[10vw]">
-        <div class="flex h-fit w-full justify-end pb-3">
+        <div class="flex h-fit w-full flex-row-reverse gap-4 pb-3">
           <button
-            class="text-medium mt-3 mb-2 h-fit w-fit rounded-lg bg-secondary py-3 pl-7 pr-5 font-bold text-white"
+            class="text-medium mt-3 mb-2 h-fit w-fit rounded-lg bg-secondary py-2.5 pl-6 pr-4 font-bold text-white"
             :class="{ hidden: todo.new }"
             @click="() => (todo.new = !todo.new)"
           >
             <div class="inline-flex items-center justify-center">
               <span class="mr-1">New Todo</span>
               <AppSvgIcon
-                componentDirName="todo"
+                dirName="todo"
                 iconName="add"
+                class="h-[25px] w-auto p-0.5"
+              />
+            </div>
+          </button>
+          <button
+            class="text-medium mt-3 mb-2 h-fit w-fit rounded-lg bg-primary py-2.5 pl-6 pr-4 font-bold text-white"
+            @click="openPanel()"
+          >
+            <div class="inline-flex items-center justify-center">
+              <span class="mr-1">New Section</span>
+              <AppSvgIcon
+                dirName="todo"
+                iconName="folder-plus"
                 class="h-[25px] w-auto p-0.5"
               />
             </div>
@@ -59,7 +100,6 @@
               <template #description>{{ todo.description }}</template>
             </TodoItem>
           </div>
-          <!-- <TodoAccordion /> -->
         </div>
       </div>
     </div>
@@ -67,21 +107,51 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 
-import { retrieveSession } from "@/vueutils/useAuth";
-import { allTodos, fetchTodos } from "@/vueutils/useToDo";
+import { allTodos, fetchTodos, fetchTodoSections, insertTodoSection } from "@/vueutils/useToDo";
 
 import MenuBar from "@/components/MenuBar.vue";
+import AppModal from "./AppModal.vue";
 import AppSvgIcon from "./AppSvgIcon.vue";
 import TodoItem from "./TodoItem.vue";
 import TodoNewForm from "./TodoNewForm.vue";
+import TodoSlideOverPanel from "./TodoSlideOverPanel.vue";
 
 import Left from "@/assets/svg/todo/chevron-left.svg?component";
 import Right from "@/assets/svg/todo/chevron-right.svg?component";
+import { retrieveSession } from "@/vueutils/useAuth";
 
-await fetchTodos();
-const session = await retrieveSession();
-console.log(session);
+// await fetchTodos();
+await fetchTodoSections();
+
+const sectionName = ref<string>("");
+const sectionDescription = ref<string>("");
+const panel = ref<InstanceType<typeof TodoSlideOverPanel> | null>(null);
+const modal = ref<InstanceType<typeof AppModal> | null>(null);
+
 const todo = reactive({ selected: "", new: false });
+
+const openModal = () => {
+  modal.value?.open();
+};
+
+const openPanel = () => {
+  panel.value?.open();
+};
+
+const submitSection = async () => {
+  const session = await retrieveSession();
+
+  if (session) {
+    const data = await insertTodoSection({
+      section_name: sectionName.value,
+      section_description: sectionDescription.value,
+      user_id: session.user.id,
+    });
+    console.log(data);
+  } else {
+    console.log("Session ended");
+  }
+};
 </script>

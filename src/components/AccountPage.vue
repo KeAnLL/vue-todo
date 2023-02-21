@@ -52,19 +52,20 @@
               <InputFieldWarning
                 id="password-input-warning"
                 :class="{ invisible: !account.warnings.passwordWarning }"
-                >Invalid password</InputFieldWarning
+              >
+                Invalid password</InputFieldWarning
               >
             </template>
             <template #tooltip>
               <AppSvgIcon
-                componentDirName="account"
+                dirName="account"
                 iconName="eye-slash"
                 class="h-full w-auto p-1.5"
                 v-if="!account.passwordField.visible"
                 @click="updateVisibility"
               />
               <AppSvgIcon
-                componentDirName="account"
+                dirName="account"
                 iconName="eye"
                 class="h-full w-auto p-1.5"
                 v-else
@@ -94,14 +95,14 @@
             </template>
             <template #tooltip>
               <AppSvgIcon
-                componentDirName="account"
+                dirName="account"
                 iconName="eye-slash"
                 class="h-full w-auto p-1.5"
                 v-if="!account.passwordField.visible"
                 @click="updateVisibility"
               />
               <AppSvgIcon
-                componentDirName="account"
+                dirName="account"
                 iconName="eye"
                 class="h-full w-auto p-1.5"
                 v-else
@@ -136,14 +137,9 @@
           @click="accountSubmitAction()"
         >
           <div class="inline-flex items-center justify-center">
-            <TheLoadingSpinner
-              role="status"
-              class="mr-2 h-8 w-8"
-              :class="{ hidden: !accountData.loading }"
-            />
             <span class="mr-1">{{ account.action }}</span>
             <AppSvgIcon
-              componentDirName="account"
+              dirName="account"
               iconName="cursor-arrow-ray"
               class="h-[30px] w-auto"
               :class="{ hidden: accountData.loading }"
@@ -151,6 +147,13 @@
           </div>
         </button>
       </div>
+      <AppSvgIcon
+        dirName="common"
+        iconName="loading"
+        role="status"
+        class="mr-2 h-8 w-8 animate-spin fill-white text-gray-200"
+        :class="{ hidden: !accountData.loading }"
+      />
       <div id="action-link" class="pt-3 font-medium">
         <div v-if="accountData.signin">
           Don't have an account yet?
@@ -199,7 +202,6 @@ import {
 import AppSvgIcon from "@/components/AppSvgIcon.vue";
 import InputFieldWarning from "@/components/InputFieldWarning.vue";
 import InputFieldWithIcon from "@/components/InputFieldWithIcon.vue";
-import TheLoadingSpinner from "@/components/TheLoadingSpinner.vue";
 import AppModal from "./AppModal.vue";
 import TheLogo from "./TheLogo.vue";
 
@@ -275,7 +277,11 @@ const accountSubmitAction = async () => {
   } else {
     if (accountData.signin) {
       const session = await retrieveSession();
-      router.push(`/todo/${session.user?.id}`);
+      if (session) {
+        router.push("/todo");
+      } else {
+        /* pass */
+      }
     } else {
       router.push(`/user/confirmation?mail=${email.value}`);
     }

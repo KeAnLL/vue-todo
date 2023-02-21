@@ -103,10 +103,19 @@ const retrieveSession = async (): Promise<Session | null> => {
   return data.session;
 };
 
+const refreshSession = async () => {
+  const { data, error } = await supabase.auth.refreshSession();
+  if (error) {
+    console.error("Error when refreshing user session:", error);
+  }
+  return data.session;
+};
+
 export {
   userSession,
   handleSignIn,
   handleSignUp,
   handleSignOut,
   retrieveSession,
+  refreshSession,
 };

@@ -3,5 +3,7 @@
 @tailwind utilities;
 
 @layer components {
-    
+    .btn-secondary {
+        @apply h-fit w-fit rounded-lg bg-secondary text-base font-bold text-white
+    }
 }

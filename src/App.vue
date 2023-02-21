@@ -9,4 +9,6 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import "@/assets/css/scrollbar.css";
+</script>

@@ -10,7 +10,7 @@
       class="pointer-events-none absolute inset-y-0 left-0 flex items-center"
     >
       <AppSvgIcon
-        :componentDirName="props.from"
+        :dirName="props.from"
         :iconName="iconName"
         class="h-full w-auto p-1"
       />

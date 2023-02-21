@@ -34,11 +34,7 @@
       </div>
     </div>
     <div id="banner-icon" class="pl-4">
-      <SvgIcon
-        componentDirName="homepage"
-        iconName="ideas_flow"
-        class="h-auto w-auto"
-      />
+      <SvgIcon dirName="homepage" iconName="ideas_flow" class="h-auto w-auto" />
     </div>
   </div>
   <div id="powered-by" class="pt-10 pb-10 pl-[25%] pr-[25%]">
@@ -75,11 +71,10 @@ const router = useRouter();
 
 const directToSignUp = () => {
   router.push({
-          name: 'Account',
-          params: { type: 'signup' },
-        })
-      
-}
+    name: "Account",
+    params: { type: "signup" },
+  });
+};
 </script>
 
 <style module>

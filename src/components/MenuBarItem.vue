@@ -4,7 +4,8 @@
       class="inline-flex w-full items-center rounded-md p-2 hover:bg-gray-100 hover:text-secondary"
       :class="{ 'p-1': props.child }"
     >
-      <Icon class="h-[1.3rem] w-auto stroke-2 pr-1.5" />
+      <!-- <Icon  /> -->
+      <AppSvgIcon dirName="todo" :iconName="props.iconName" class="h-[1.3rem] w-auto stroke-2 pr-1.5" />
       <slot name="title"></slot>
     </div>
     <slot name="accordion" class=""></slot>
@@ -12,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent } from "vue";
+import AppSvgIcon from "./AppSvgIcon.vue";
 
 const props = defineProps({
   iconName: {
@@ -24,8 +25,4 @@ const props = defineProps({
     required: false,
   },
 });
-
-const Icon = defineAsyncComponent(
-  () => import(`@/components/icons/Icon${props.iconName}.vue`)
-);
 </script>

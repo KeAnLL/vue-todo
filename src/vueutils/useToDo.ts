@@ -1,9 +1,10 @@
 import { supabase } from "@/lib/supabase";
-import type { Todo } from "@/types/todo";
+import type { Todo, TodoSection } from "@/types/todo";
 import type { PostgrestResponse } from "@supabase/postgrest-js";
 import { ref } from "vue";
 
 const allTodos = ref<Todo[]>([]);
+const allTodoSections = ref<TodoSection[]>([]);
 
 const fetchTodos = async (): Promise<null> => {
   try {
@@ -89,4 +90,66 @@ const deleteTodo = async (todo: Todo): Promise<undefined | null> => {
   }
 };
 
-export { allTodos, fetchTodos, insertTodo, updateTodoCompletion, deleteTodo };
+const fetchTodoSections = async (): Promise<null> => {
+  try {
+    const { data, error }: PostgrestResponse<TodoSection> = await supabase
+      .from("todo_sections")
+      .select("*")
+      .order("section_id");
+
+    if (error) {
+      console.error(error);
+      return null;
+    }
+
+    if (data == null) {
+      allTodos.value = [];
+      return null;
+    }
+
+    const sectionSelection: TodoSection[] = [{
+      section_id: 0,
+      section_name: "Null",
+      section_description: "null",
+      user_id: "0",
+    }];
+
+    allTodoSections.value = sectionSelection.concat(data);
+    console.log(allTodoSections.value);
+    console.log("Got todo");
+  } catch (err) {
+    console.error("Error retrieving data from db:", err);
+  }
+  return null;
+};
+
+const insertTodoSection = async (section: TodoSection) => {
+  try {
+    const { data, error }: PostgrestResponse<TodoSection> = await supabase
+      .from("todo_sections")
+      .insert(section)
+      .select();
+
+    if (error) {
+      console.error("Error when inserting", error);
+      return null;
+    }
+
+    console.log("New section created");
+    return data;
+  } catch (err) {
+    console.log("Error when inserting to db:", err);
+    return null;
+  }
+};
+
+export {
+  allTodos,
+  allTodoSections,
+  fetchTodos,
+  insertTodo,
+  updateTodoCompletion,
+  deleteTodo,
+  fetchTodoSections,
+  insertTodoSection,
+};
