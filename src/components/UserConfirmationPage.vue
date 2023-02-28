@@ -31,8 +31,6 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
 
-import { retrieveSession } from "@/vueutils/useAuth";
-
 import ArrowCircleLeft from "@/assets/svg/arrow-circle-left.svg?component";
 import CheckBadge from "@/assets/svg/todo/check-badge.svg?component";
 

@@ -1,12 +1,12 @@
 <template>
   <div
-    class="flex flex-col sm:flex-row items-center text:lg sm:text-3xl text-primary"
+    class="text:lg flex flex-col items-center text-primary sm:flex-row sm:text-3xl"
     :class="$style.icontext"
   >
     <AppSvgIcon
       dirName="common"
       iconName="logo"
-      class="mr-0 sm:mr-2 stroke-secondary"
+      class="mr-0 stroke-secondary sm:mr-2"
       :style="{
         height: props.height + 'px',
       }"

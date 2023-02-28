@@ -3,7 +3,7 @@
     v-model="completed"
     :class="completed ? 'bg-secondary' : 'bg-gray-300'"
     class="relative inline-flex h-6 w-11 items-center rounded-full"
-    @click="() => emit('change', completed)"
+    @click="switchClick"
   >
     <span class="sr-only">Todo completed</span>
     <span
@@ -17,9 +17,21 @@
 import { Switch } from "@headlessui/vue";
 import { ref } from "vue";
 
-const completed = ref<boolean>(false);
+const props = defineProps({
+  completed: {
+    type: Boolean,
+    required: true,
+  },
+})
+
+const completed = ref<boolean>(props.completed);
+
+const switchClick = () => {
+  completed.value = !completed.value;
+  emit("change", completed.value);
+};
 
 const emit = defineEmits<{
-  (e: "change", value: boolean): void;
+  (e: "change", completed: boolean): void;
 }>();
 </script>

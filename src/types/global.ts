@@ -14,7 +14,3 @@ export interface AuthData {
   user: User | null;
   session: Session | null;
 }
-
-export const isAuthErrorMessage = (data: any): data is AuthErrorMessage => {
-  return "msg" in data;
-};

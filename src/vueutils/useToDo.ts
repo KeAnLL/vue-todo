@@ -1,12 +1,8 @@
 import { supabase } from "@/lib/supabase";
-import type { Todo, TodoSection } from "@/types/todo";
+import type { Todo } from "@/types/todo";
 import type { PostgrestResponse } from "@supabase/postgrest-js";
-import { ref } from "vue";
 
-const allTodos = ref<Todo[]>([]);
-const allTodoSections = ref<TodoSection[]>([]);
-
-const fetchTodos = async (): Promise<null> => {
+const fetchTodos = async (): Promise<Todo[]> => {
   try {
     const { data, error }: PostgrestResponse<Todo> = await supabase
       .from("todos")
@@ -15,23 +11,22 @@ const fetchTodos = async (): Promise<null> => {
 
     if (error) {
       console.error(error);
-      return null;
+      return [];
     }
 
     if (data == null) {
-      allTodos.value = [];
-      return null;
+      return [];
     }
 
-    allTodos.value = data;
     console.log("Got todo");
+    return data;
   } catch (err) {
     console.error("Error retrieving data from db:", err);
   }
-  return null;
+  return [];
 };
 
-const insertTodo = async (todo: Todo): Promise<Todo[] | null> => {
+const insertTodo = async (todo: Todo): Promise<Todo[]> => {
   try {
     const { data, error }: PostgrestResponse<Todo> = await supabase
       .from("todos")
@@ -40,26 +35,51 @@ const insertTodo = async (todo: Todo): Promise<Todo[] | null> => {
 
     if (error) {
       console.error("Error when inserting", error);
-      return null;
+      return [];
     }
 
     console.log("New todo created");
     return data;
   } catch (err) {
     console.log("Error when inserting to db:", err);
-    return null;
   }
+  return [];
+};
+
+const updateTodo = async (todo: Todo): Promise<Todo | null> => {
+  try {
+    const { data, error }: PostgrestResponse<Todo> = await supabase
+      .from("todos")
+      .update({
+        title: todo.title,
+        description: todo.description,
+        completed: todo.completed,
+      })
+      .eq("id", todo.id)
+      .select();
+
+    if (error) {
+      console.error("Error when updating", error);
+      return null;
+    }
+
+    console.log(data);
+    return data[0];
+  } catch (err) {
+    console.error("Error when updating the record in db", err);
+  }
+  return null;
 };
 
 const updateTodoCompletion = async (
-  todo: Todo,
+  id: number,
   completed: boolean
 ): Promise<Todo[] | null> => {
   try {
     const { data, error }: PostgrestResponse<Todo> = await supabase
       .from("todos")
       .update({ completed: completed })
-      .eq("id", todo.id)
+      .eq("id", id)
       .select();
 
     if (error) {
@@ -75,81 +95,21 @@ const updateTodoCompletion = async (
   }
 };
 
-const deleteTodo = async (todo: Todo): Promise<undefined | null> => {
+const deleteTodo = async (id: number): Promise<boolean> => {
   try {
-    const { error } = await supabase.from("todos").delete().eq("id", todo.id);
+    const { error } = await supabase.from("todos").delete().eq("id", id);
+
     if (error) {
       console.error("Error when deleting", error);
-      return null;
+      return false;
     }
 
-    console.log("Update done");
+    console.log("Delete done");
+    return true;
   } catch (err) {
-    console.log("Error when deleting record in db", err);
-    return null;
+    console.error("Error when deleting record in db", err);
   }
+  return false;
 };
 
-const fetchTodoSections = async (): Promise<null> => {
-  try {
-    const { data, error }: PostgrestResponse<TodoSection> = await supabase
-      .from("todo_sections")
-      .select("*")
-      .order("section_id");
-
-    if (error) {
-      console.error(error);
-      return null;
-    }
-
-    if (data == null) {
-      allTodos.value = [];
-      return null;
-    }
-
-    const sectionSelection: TodoSection[] = [{
-      section_id: 0,
-      section_name: "Null",
-      section_description: "null",
-      user_id: "0",
-    }];
-
-    allTodoSections.value = sectionSelection.concat(data);
-    console.log(allTodoSections.value);
-    console.log("Got todo");
-  } catch (err) {
-    console.error("Error retrieving data from db:", err);
-  }
-  return null;
-};
-
-const insertTodoSection = async (section: TodoSection) => {
-  try {
-    const { data, error }: PostgrestResponse<TodoSection> = await supabase
-      .from("todo_sections")
-      .insert(section)
-      .select();
-
-    if (error) {
-      console.error("Error when inserting", error);
-      return null;
-    }
-
-    console.log("New section created");
-    return data;
-  } catch (err) {
-    console.log("Error when inserting to db:", err);
-    return null;
-  }
-};
-
-export {
-  allTodos,
-  allTodoSections,
-  fetchTodos,
-  insertTodo,
-  updateTodoCompletion,
-  deleteTodo,
-  fetchTodoSections,
-  insertTodoSection,
-};
+export { fetchTodos, insertTodo, updateTodo, updateTodoCompletion, deleteTodo };

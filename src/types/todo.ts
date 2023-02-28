@@ -16,5 +16,9 @@ export interface TodoSection {
   created_at?: string;
   section_name: string;
   section_description: string;
-  user_id: string;
+  user_id: string | null;
 }
+
+export interface TodoSection_Todos extends TodoSection {
+  todos: Todo[];
+} 

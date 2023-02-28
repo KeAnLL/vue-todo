@@ -1,15 +1,11 @@
-import type { AuthData, AuthErrorMessage, Credentials } from "@/types/global";
-import type { AuthResponse, Session } from "@supabase/gotrue-js";
-
-import { ref } from "vue";
-
 import { supabase } from "@/lib/supabase";
 import {
   UndefinedUserEmailError,
   UndefinedUserPasswordError,
 } from "@/utils/error";
 
-const userSession = ref<Session | null>(null);
+import type { AuthData, AuthErrorMessage, Credentials } from "@/types/global";
+import type { AuthResponse, Session } from "@supabase/gotrue-js";
 
 const handleSignIn = async (
   credentials: Credentials
@@ -25,14 +21,12 @@ const handleSignIn = async (
       });
 
     if (error) {
-      // alert(`Error logging in: ${error.message}`);
       return {
         msg: error.message,
       };
     }
 
     if (!error && !data.user) {
-      // alert("Check your email for the login link");
       return {
         msg: "Check your email for the login link",
       };
@@ -41,7 +35,6 @@ const handleSignIn = async (
     return data;
   } catch (error: any) {
     console.error("Error thrown: ", error.message);
-    // alert(error);
     return {
       fatal: true,
       msg: error.message,
@@ -62,7 +55,6 @@ const handleSignUp = async (
     });
 
     if (error) {
-      // alert(error.message);
       console.error("Error:", error.message);
       return {
         msg: error.message,
@@ -72,7 +64,6 @@ const handleSignUp = async (
     return data;
     /* Signup successfully, confirmation email should be sent */
   } catch (error: any) {
-    // alert("Fatal error signing up");
     console.error("signup error: ", error);
     return {
       fatal: true,
@@ -81,18 +72,25 @@ const handleSignUp = async (
   }
 };
 
-const handleSignOut = async () => {
+const handleSignOut = async (): Promise<AuthErrorMessage | null> => {
   try {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      alert("Error signing out");
       console.error("signout error: ", error);
+      return {
+        msg: error.message,
+      }
     }
-  } catch (error) {
-    alert("Unknown error when signing out");
+  } catch (error: any) {
     console.error("error: ", error);
+    return {
+      fatal: true,
+      msg: error.message,
+    };
   }
+
+  return null;
 };
 
 const retrieveSession = async (): Promise<Session | null> => {
@@ -112,7 +110,6 @@ const refreshSession = async () => {
 };
 
 export {
-  userSession,
   handleSignIn,
   handleSignUp,
   handleSignOut,
