@@ -1,16 +1,18 @@
 <template>
-  <div>
+  <div class="px-2">
     <div
-      class="inline-flex w-full items-center rounded-md p-2 hover:bg-gray-100 hover:text-secondary"
+      class="inline-flex w-full items-center justify-center md:justify-start rounded-md p-2 hover:bg-gray-100 hover:text-secondary"
       :class="{ 'p-1': props.child }"
     >
       <!-- <Icon  /> -->
       <AppSvgIcon
         dirName="todo"
         :iconName="props.iconName"
-        class="h-[1.3rem] w-auto stroke-2 pr-1.5"
+        class="md:h-[1.3rem] w-auto stroke-2 pr-1.5"
       />
-      <slot name="title"></slot>
+      <span class="hidden md:block">
+        <slot name="title"></slot>
+      </span>
     </div>
     <slot name="accordion" class=""></slot>
   </div>

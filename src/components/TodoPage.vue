@@ -1,84 +1,89 @@
 <template>
-  <div class="flex flex-row bg-transparent">
-    <!-- <nav class="fixed top-0 left-0 h-screen w-fit bg-white"> -->
-    <nav class="h-screen w-fit bg-white text-xs">
-      <MenuBar @update="(selected) => (todo.selected = selected)" />
-    </nav>
-    <div class="container bg-gray-100 max-h-screen overflow-auto">
-      <AppModal ref="modal" />
-      <TodoSlideOverPanel ref="panel" @submit="submitSection()">
-        <template #dialog-title>Add new section</template>
-        <template #dialog-description>Get started by filling the information below to create a new section
-          for your todo list</template>
-        <template #dialog-body>
-          <div class="flex flex-col gap-4 px-4 text-base">
-            <div>
-              <label class="block pb-1 font-medium">Section name</label>
-              <input type="text" v-model.lazy="sectionName"
-                class="w-full rounded-lg border-gray-400 px-1 py-0.5 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-0" />
-            </div>
-            <div>
-              <label class="block pb-1 font-medium">Section description</label>
-              <textarea v-model.lazy="sectionDescription"
-                class="h-28 w-full rounded-lg border-gray-400 px-1 py-0.5 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-0"></textarea>
-            </div>
-          </div>
-        </template>
-        <template #dialog-button>Add section</template>
-      </TodoSlideOverPanel>
-      <div id="selected-top-banner"
-        class="flex w-full flex-row items-center justify-between px-10 py-5 text-center font-semibold text-gray-500">
-        <div class="inline-flex items-center justify-center rounded-lg py-2 pl-2 pr-3 hover:bg-gray-200">
-          <Left class="p-0.5" />
-          Previous
-        </div>
-        <span class="text-lg">
-          {{ todo.selected }}
-        </span>
-        <div class="inline-flex items-center justify-center rounded-lg py-2 pl-3 pr-2 hover:bg-gray-200">
-          Next
-          <Right class="p-0.5" />
-        </div>
-      </div>
-      <div id="todo-container" class="px-[10vw]">
-        <div class="flex h-fit w-full flex-row-reverse gap-4 pb-3">
-          <button class="text-medium mt-3 mb-2 h-fit w-fit rounded-lg bg-secondary py-2.5 pl-6 pr-4 font-bold text-white"
-            :class="{ hidden: todo.new }" @click="() => (todo.new = !todo.new)">
-            <div class="inline-flex items-center justify-center">
-              <span class="mr-1">New Todo</span>
-              <AppSvgIcon dirName="todo" iconName="add" class="h-[25px] w-auto p-0.5" />
-            </div>
-          </button>
-          <button class="text-medium mt-3 mb-2 h-fit w-fit rounded-lg bg-primary py-2.5 pl-6 pr-4 font-bold text-white"
-            @click="openPanel()">
-            <div class="inline-flex items-center justify-center">
-              <span class="mr-1">New Section</span>
-              <AppSvgIcon dirName="todo" iconName="folder-plus" class="h-[25px] w-auto p-0.5" />
-            </div>
-          </button>
-        </div>
-        <div id="todo-item-with-scrollspy" class="flex flex-row w-full">
-          <ol id="scrollspy" class=" pr-10">
-            <span class="uppercase font-bold">Sections</span>
-            <li v-for="section in todoSections"><a :href="'#' + section.section_name">{{ section.section_name }}</a></li>
-          </ol>
-          <div id="todo-items-container" class="grow">
-            <div :id="section.section_name" v-for="section in todoSections" :key="section.section_id" class="section">
-              <div class="py-2 pl-2 text-2xl font-bold">
-                {{ section.section_name }}
-              </div>
-              <div v-for="todo in retrieveTodosUnderSection(section.section_id)" :key="todo.id">
-                <TodoItem :id="todo.id" :title="todo.title" :description="todo.description" :completed="todo.completed"
-                  :section="todo.todo_section_id" />
-              </div>
-              <TodoNewState :section="section.section_id" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <AppNotification></AppNotification>
+  <div class="bg-transparent h-screen w-screen">
+    <div id="todo-container" class="flex">
+      <nav class="flex-initial h-screen bg-white text-xs w-fit">
+        <MenuBar @update="(selected) => (todo.selected = selected)" />
+      </nav>
+      <div class="flex-1">
+        <div class="flex flex-col bg-gray-100 max-h-screen">
+          <AppModal ref="modal" />
 
+          <TodoSlideOverPanel ref="panel" @submit="submitSection()">
+            <template #dialog-title>Add new section</template>
+            <template #dialog-description>Get started by filling the information below to create a new section
+              for your todo list</template>
+            <template #dialog-body>
+              <div class="flex flex-col gap-4 px-4 text-base">
+                <div>
+                  <label class="block pb-1 font-medium">Section name</label>
+                  <input type="text" v-model.lazy="sectionName"
+                    class="w-full rounded-lg border-gray-400 px-1 py-0.5 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-0" />
+                </div>
+                <div>
+                  <label class="block pb-1 font-medium">Section description</label>
+                  <textarea v-model.lazy="sectionDescription"
+                    class="h-28 w-full rounded-lg border-gray-400 px-1 py-0.5 shadow-sm focus:border-gray-400 focus:outline-none focus:ring-0"></textarea>
+                </div>
+              </div>
+            </template>
+            <template #dialog-button>Add section</template>
+          </TodoSlideOverPanel>
+
+          <div id="selected-top-banner"
+            class="flex h-[10vh]  flex-row items-center justify-between px-10 py-5 text-center font-semibold text-gray-500">
+            <div class="inline-flex items-center justify-center rounded-lg py-2 pl-2 pr-3 hover:bg-gray-200">
+              <Left class="p-0.5" />
+              Previous
+            </div>
+            <span class="text-lg">
+              {{ todo.selected }}
+            </span>
+            <div class="inline-flex items-center justify-center rounded-lg py-2 pl-3 pr-2 hover:bg-gray-200">
+              Next
+              <Right class="p-0.5" />
+            </div>
+          </div>
+
+          <div id="todo-items-container" class="flex flex-col px-[5vw]">
+            <!-- <div class="flex h-fit w-full flex-row-reverse gap-4 pb-3">
+              <button
+                class="text-medium mt-3 mb-2 h-fit w-fit rounded-lg bg-primary py-2.5 pl-6 pr-4 font-bold text-white"
+                @click="openPanel()">
+                <div class="inline-flex items-center justify-center">
+                  <span class="mr-1">New Section</span>
+                  <AppSvgIcon dirName="todo" iconName="folder-plus" class="h-[25px] w-auto p-0.5" />
+                </div>
+              </button>
+            </div> -->
+            <div id="todo-item-with-scrollspy" class="flex flex-row justify-center h-[90vh]">
+              <div id="scrollspy" class="pr-10 sticky overflow-auto my-auto w-fit hidden sm:block">
+                <span class="uppercase font-extrabold text-xl">Sections</span>
+                <div v-for="section in todoSections">
+                  <a :href="'#' + section.section_name">{{ section.section_name }}</a>
+                </div>
+              </div>
+              <div id="todo-items-container" class="grow flex flex-col h-full overflow-y-auto p-5">
+                <div :id="section.section_name" v-for="section in todoSections" :key="section.section_id" class="section">
+                  <div class="pb-3">
+                    <div class="py-2 pl-2 text-2xl font-bold">
+                      {{ section.section_name }}
+                    </div>
+                    <div v-for="todo in retrieveTodosUnderSection(section.section_id)" :key="todo.id">
+                      <TodoItem :id="todo.id" :title="todo.title" :description="todo.description"
+                        :completed="todo.completed" :section="todo.todo_section_id" />
+                    </div>
+                    <TodoNewState :section="section.section_id" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- <AppNotification></AppNotification> -->
+    </div>
   </div>
 </template>
 
