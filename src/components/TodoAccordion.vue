@@ -46,10 +46,10 @@
       }"
     >
       <div id="accordion-item" ref="ac" class="pl-10 pr-5">
-        <TodoItem></TodoItem>
+        <TodoItem :section="1" :completed="false"></TodoItem>
       </div>
       <div id="accordion-item" ref="ac" class="pl-10 pr-5">
-        <TodoItem></TodoItem>
+        <TodoItem :section="1" :completed="false"></TodoItem>
       </div>
     </div>
   </div>
