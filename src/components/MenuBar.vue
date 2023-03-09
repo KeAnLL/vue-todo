@@ -1,14 +1,19 @@
 <template>
-  <div class="flex h-full flex-col md:px-4 text-base font-medium text-gray-700">
+  <div class="flex h-full flex-col text-base font-medium text-gray-700 md:px-4">
     <TheLogo :height="35" class="p-5" />
     <div class="flex flex-col gap-5 py-5">
-      <MenuBarItem v-for="item in items" :key="item.id" :iconName="item.iconName" @click="emit('update', item.title)">
+      <MenuBarItem
+        v-for="item in items"
+        :key="item.id"
+        :iconName="item.iconName"
+        @click="emit('update', item.title)"
+      >
         <template #title>
           <span>{{ item.title }}</span>
         </template>
       </MenuBarItem>
     </div>
-    <div class="mt-auto py-2 flex justify-center">
+    <div class="mt-auto flex justify-center py-2">
       <UserAvatar />
     </div>
   </div>

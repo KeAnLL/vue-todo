@@ -22,7 +22,7 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-})
+});
 
 const completed = ref<boolean>(props.completed);
 

@@ -1,7 +1,13 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import { fetchTodos, insertTodo, updateTodo, updateTodoCompletion, deleteTodo } from "@/vueutils/useTodo";
+import {
+  deleteTodo,
+  fetchTodos,
+  insertTodo,
+  updateTodo,
+  updateTodoCompletion,
+} from "@/vueutils/useTodo";
 
 import type { Todo } from "@/types/todo";
 
@@ -51,7 +57,7 @@ const useTodosStore = defineStore("todos", () => {
       todos.value = todos.value.concat(res);
     } catch (err) {
       console.error(err);
-    } 
+    }
   };
 
   const storeUpdateTodo = async (todo: Todo) => {
@@ -65,7 +71,7 @@ const useTodosStore = defineStore("todos", () => {
           target.description = res.description;
           target.completed = res.completed;
         } else {
-          console.error("Local todo item not found after updating")
+          console.error("Local todo item not found after updating");
         }
       } else {
         console.error("Empty return object after updating");
@@ -77,11 +83,11 @@ const useTodosStore = defineStore("todos", () => {
 
   const storeUpdateTodoCompletion = async (id: number) => {
     try {
-      todo.value = todos.value.find((todo) => todo.id === id)
+      todo.value = todos.value.find((todo) => todo.id === id);
       if (todo.value) {
         const res = await updateTodoCompletion(id, !todo.value.completed);
         console.log(res);
-        todo.value.completed = !todo.value.completed; 
+        todo.value.completed = !todo.value.completed;
         todoNotification.value.push(todo.value);
       } else {
         console.error("Todo not found in store");
@@ -98,16 +104,18 @@ const useTodosStore = defineStore("todos", () => {
         const index = todos.value.findIndex((todo) => todo.id === id);
         todos.value.splice(index, 1);
       } else {
-        console.error("Error when deleting todo")
+        console.error("Error when deleting todo");
       }
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   const removeNotification = (id: number) => {
-    todoNotification.value = todoNotification.value.filter((todo) => todo.id !== id);
-  }
+    todoNotification.value = todoNotification.value.filter(
+      (todo) => todo.id !== id
+    );
+  };
 
   return {
     todo,

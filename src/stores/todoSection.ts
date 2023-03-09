@@ -1,7 +1,10 @@
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import { ref } from "vue";
 
-import { fetchTodoSections, insertTodoSection } from "@/vueutils/useTodoSection";
+import {
+  fetchTodoSections,
+  insertTodoSection,
+} from "@/vueutils/useTodoSection";
 
 import type { TodoSection } from "@/types/todo";
 
@@ -29,11 +32,13 @@ const useTodoSectionStore = defineStore("todo_section", () => {
 
   const retrieveSection = (id: number | null): TodoSection => {
     if (id) {
-      const section = todoSections.value.find((section) => section.section_id === id);
+      const section = todoSections.value.find(
+        (section) => section.section_id === id
+      );
       if (section) return section;
     }
-    return todoSections.value[0];  // null
-  }
+    return todoSections.value[0]; // null
+  };
 
   return {
     todoSections,

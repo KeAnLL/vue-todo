@@ -2,34 +2,54 @@
   <div class="divide-y rounded-lg border bg-white">
     <div id="key-in" class="px-4 py-3">
       <div class="flex flex-col">
-        <input type="text" placeholder="Title" v-model.lazy="title"
-          class="border-none p-0 pb-1.5 text-xl font-semibold outline-none focus:ring-0" />
-        <textarea placeholder="Write a description" v-model.lazy="description"
-          class="h-[15vh] border-none p-0 outline-none focus:ring-0"></textarea>
+        <input
+          type="text"
+          placeholder="Title"
+          v-model.lazy="title"
+          class="border-none p-0 pb-1.5 text-xl font-semibold outline-none focus:ring-0"
+        />
+        <textarea
+          placeholder="Write a description"
+          v-model.lazy="description"
+          class="h-[15vh] border-none p-0 outline-none focus:ring-0"
+        ></textarea>
         <div id="pills" class="flex w-full items-center pt-2">
           <div class="mr-auto flex flex-row gap-2">
-            <AppListbox :section="props.section" class="w-40" @select="(selectedSection) => (section = selectedSection)" />
+            <AppListbox
+              :section="props.section"
+              class="w-40"
+              @select="(selectedSection) => (section = selectedSection)"
+            />
           </div>
           <div class="inline-flex items-center gap-2 font-medium">
             Is completed?
-            <AppToggleSwitch :section="props.section" :completed="completed"
-              @change="(isCompleted) => (completed = isCompleted)" />
+            <AppToggleSwitch
+              :section="props.section"
+              :completed="completed"
+              @change="(isCompleted) => (completed = isCompleted)"
+            />
           </div>
         </div>
       </div>
     </div>
     <div class="flex items-center justify-end gap-3 py-2 pr-4">
-      <button v-if="props.id"
+      <button
+        v-if="props.id"
         class="text-medium h-fit w-fit rounded-lg bg-red-400 py-2 px-5 font-semibold text-white hover:bg-red-100"
-        @click="deleteTodo">
+        @click="deleteTodo"
+      >
         Delete
       </button>
-      <button class="text-medium h-fit w-fit rounded-lg py-2 px-5 font-semibold text-gray-400 hover:bg-gray-100"
-        @click="() => emit('insert')">
+      <button
+        class="text-medium h-fit w-fit rounded-lg py-2 px-5 font-semibold text-gray-400 hover:bg-gray-100"
+        @click="() => emit('insert')"
+      >
         Cancel
       </button>
-      <button class="text-medium h-fit w-fit rounded-lg bg-secondary py-2 px-5 font-semibold text-white"
-        @click="submitTodo">
+      <button
+        class="text-medium h-fit w-fit rounded-lg bg-secondary py-2 px-5 font-semibold text-white"
+        @click="submitTodo"
+      >
         {{ props.id ? "Update" : "Create" }}
       </button>
     </div>
@@ -37,11 +57,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import type { PropType } from "vue";
+import { ref } from "vue";
 
-import { retrieveSession } from "@/vueutils/useAuth";
 import { useTodosStore } from "@/stores/todo";
+import { retrieveSession } from "@/vueutils/useAuth";
 
 import AppListbox from "./AppListbox.vue";
 import AppToggleSwitch from "./AppToggleSwitch.vue";
@@ -114,10 +134,10 @@ const deleteTodo = async () => {
     if (props.id) {
       await storeDeleteTodo(props.id);
     } else {
-      console.error("Deletion fail. Undefined id")
+      console.error("Deletion fail. Undefined id");
     }
   } else {
     console.log("Session ended");
   }
-}
+};
 </script>

@@ -8,7 +8,7 @@ const fetchTodoSections = async (): Promise<TodoSection[]> => {
       .from("todo_sections")
       .select("*")
       .order("section_id");
-    
+
     if (error) {
       console.error(error);
       // return null;
@@ -31,7 +31,9 @@ const fetchTodoSections = async (): Promise<TodoSection[]> => {
   return [];
 };
 
-const insertTodoSection = async (section: TodoSection): Promise<TodoSection[]> => {
+const insertTodoSection = async (
+  section: TodoSection
+): Promise<TodoSection[]> => {
   try {
     const { data, error }: PostgrestResponse<TodoSection> = await supabase
       .from("todo_sections")

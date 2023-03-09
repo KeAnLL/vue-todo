@@ -80,7 +80,7 @@ const handleSignOut = async (): Promise<AuthErrorMessage | null> => {
       console.error("signout error: ", error);
       return {
         msg: error.message,
-      }
+      };
     }
   } catch (error: any) {
     console.error("error: ", error);

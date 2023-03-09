@@ -8,7 +8,7 @@
       ><span class="pl-4">Page Not Found</span>
     </div>
     <div class="text:sm inline-flex pr-3 font-medium md:text-base">
-      <AppSvgIcon iconName="wrench-screwdriver" class="h-6 w-auto pr-2" />
+      <AppSvgIcon dirName="common" iconName="wrench-screwdriver" class="h-6 w-auto pr-2" />
       Need help for this page?&nbsp;<span class="font-medium text-secondary"
         >Contact us</span
       >
@@ -17,7 +17,7 @@
       class="mt-10 inline-flex items-center rounded-md bg-secondary pl-5 pr-6 pt-2 pb-2 text-sm text-lg font-medium text-white md:text-base"
       @click="router.push('/')"
     >
-      <AppSvgIcon iconName="arrow-circle-left" class="h-6 w-auto pr-2" />Back to
+      <AppSvgIcon dirName="common" iconName="arrow-circle-left" class="h-6 w-auto pr-2" />Back to
       Homepage
     </button>
   </div>

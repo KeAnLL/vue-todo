@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
 
-import ArrowCircleLeft from "@/assets/svg/arrow-circle-left.svg?component";
+import ArrowCircleLeft from "@/assets/svg/common/arrow-circle-left.svg?component";
 import CheckBadge from "@/assets/svg/todo/check-badge.svg?component";
 
 import TheLogo from "./TheLogo.vue";

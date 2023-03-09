@@ -21,4 +21,4 @@ export interface TodoSection {
 
 export interface TodoSection_Todos extends TodoSection {
   todos: Todo[];
-} 
+}
