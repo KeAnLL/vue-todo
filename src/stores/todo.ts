@@ -7,7 +7,7 @@ import {
   insertTodo,
   updateTodo,
   updateTodoCompletion,
-} from "@/vueutils/useTodo";
+} from "@/vueutils/useToDo";
 
 import type { Todo } from "@/types/todo";
 

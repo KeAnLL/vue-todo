@@ -23,6 +23,7 @@ const fetchTodos = async (): Promise<Todo[]> => {
   } catch (err) {
     console.error("Error retrieving data from db:", err);
   }
+  
   return [];
 };
 
