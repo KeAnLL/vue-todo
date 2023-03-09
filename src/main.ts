@@ -30,12 +30,12 @@ const accountGuard = (to: RouteLocationNormalized) => {
 };
 
 const routes = [
-  { path: "/", name: "Homepage", component: TheHomepage },
+  { path: "/", name: "Homepage", component: TheHomepage, alias: "/homepage" },
   {
     path: "/account/:type",
     name: "Account",
     component: AccountPage,
-    beforeEnter: [accountGuard],
+    beforeEnter: [accountGuard],  // can change to children
   },
   {
     path: "/user",
@@ -57,8 +57,8 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
   routes,
+  history: createWebHistory(import.meta.env.BASE_URL),
   strict: true,
 });
 
