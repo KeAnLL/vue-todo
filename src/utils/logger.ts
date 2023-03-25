@@ -10,7 +10,7 @@ const dbLogger = (level: LogLevelType, operation: DbOperationType, action: Strin
 };
 
 const storeLogger = (level: LogLevelType, ...args: any[]) => {
-  logger(level, "store", args);
+  logger(level, "todo_store", args);
 };
 
 export { dbLogger, storeLogger };
