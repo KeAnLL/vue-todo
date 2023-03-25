@@ -1,4 +1,7 @@
 import { supabase } from "@/lib/supabase";
+
+import { dbLogger } from "@/utils/logger";
+
 import type { Todo } from "@/types/todo";
 import type { PostgrestResponse } from "@supabase/postgrest-js";
 
@@ -10,7 +13,7 @@ const fetchTodos = async (): Promise<Todo[]> => {
       .order("id");
 
     if (error) {
-      console.error(error);
+      dbLogger("error", "select", "todos");
       return [];
     }
 
@@ -18,10 +21,10 @@ const fetchTodos = async (): Promise<Todo[]> => {
       return [];
     }
 
-    console.log("Got todo");
+    dbLogger("info", "select", "todos", "success");
     return data;
-  } catch (err) {
-    console.error("Error retrieving data from db:", err);
+  } catch (err: any) {
+    dbLogger("error", "select", "todos", "UncaughtError:", err.message);
   }
   
   return [];
@@ -35,14 +38,14 @@ const insertTodo = async (todo: Todo): Promise<Todo[]> => {
       .select();
 
     if (error) {
-      console.error("Error when inserting", error);
+      dbLogger("error", "insert", "todos", error.message);
       return [];
     }
 
-    console.log("New todo created");
+    dbLogger("log", "insert", "todos", "success");
     return data;
-  } catch (err) {
-    console.log("Error when inserting to db:", err);
+  } catch (err: any) {
+      dbLogger("error", "insert", "todos", "UncaughtError:", err.message);
   }
   return [];
 };
@@ -60,14 +63,14 @@ const updateTodo = async (todo: Todo): Promise<Todo | null> => {
       .select();
 
     if (error) {
-      console.error("Error when updating", error);
+      dbLogger("error", "update", "todos", error.message);
       return null;
     }
 
-    console.log(data);
+    dbLogger("log", "update", "todos", data);
     return data[0];
-  } catch (err) {
-    console.error("Error when updating the record in db", err);
+  } catch (err: any) {
+    dbLogger("error", "update", "todos", "UncaughtError:", err.message);
   }
   return null;
 };
@@ -84,14 +87,14 @@ const updateTodoCompletion = async (
       .select();
 
     if (error) {
-      console.error("Error when updating", error);
+      dbLogger("error", "update", "todos_completion", error.message);
       return null;
     }
 
-    console.log("Update done");
+    dbLogger("log", "update", "todos_completion", "success");
     return data;
-  } catch (err) {
-    console.log("Error when updating to db", err);
+  } catch (err: any) {
+    dbLogger("error", "update", "todos_completion", "UncaughtError:", err.message);
     return null;
   }
 };
@@ -101,14 +104,14 @@ const deleteTodo = async (id: number): Promise<boolean> => {
     const { error } = await supabase.from("todos").delete().eq("id", id);
 
     if (error) {
-      console.error("Error when deleting", error);
+      dbLogger("error", "delete", "todos", error.message);
       return false;
     }
 
-    console.log("Delete done");
+    dbLogger("log", "delete", "todos", "success");
     return true;
-  } catch (err) {
-    console.error("Error when deleting record in db", err);
+  } catch (err: any) {
+    dbLogger("error", "delete", "todos", "UncaughtError:", err.message);
   }
   return false;
 };

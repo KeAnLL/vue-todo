@@ -8,6 +8,10 @@ import svgLoader from "vite-svg-loader";
 export default defineConfig({
   // base: "/vue-todo/",
   plugins: [vue(), svgLoader()],
+  server: {
+    host: true,
+    port: 8000,
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

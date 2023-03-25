@@ -4,6 +4,8 @@ import {
   UndefinedUserPasswordError,
 } from "@/utils/error";
 
+import { dbLogger } from "@/utils/logger";
+
 import type { AuthData, AuthErrorMessage, Credentials } from "@/types/global";
 import type { AuthResponse, Session } from "@supabase/gotrue-js";
 
@@ -21,12 +23,14 @@ const handleSignIn = async (
       });
 
     if (error) {
+      dbLogger("error", "insert", "signin", error.message);
       return {
         msg: error.message,
       };
     }
 
     if (!error && !data.user) {
+      dbLogger("warn", "insert", "post-signin");
       return {
         msg: "Check your email for the login link",
       };
@@ -34,7 +38,7 @@ const handleSignIn = async (
 
     return data;
   } catch (error: any) {
-    console.error("Error thrown: ", error.message);
+    dbLogger("error", "insert", "signin", "UncaughtError:", error.message);
     return {
       fatal: true,
       msg: error.message,
@@ -55,7 +59,7 @@ const handleSignUp = async (
     });
 
     if (error) {
-      console.error("Error:", error.message);
+      dbLogger("error", "insert", "signup", error.message);
       return {
         msg: error.message,
       };
@@ -64,7 +68,7 @@ const handleSignUp = async (
     return data;
     /* Signup successfully, confirmation email should be sent */
   } catch (error: any) {
-    console.error("signup error: ", error);
+    dbLogger("error", "insert", "signup", "UncaughtError:", error.message);
     return {
       fatal: true,
       msg: error.message,
@@ -77,13 +81,13 @@ const handleSignOut = async (): Promise<AuthErrorMessage | null> => {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      console.error("signout error: ", error);
+      dbLogger("error", "insert", "signout", error.message);
       return {
         msg: error.message,
       };
     }
   } catch (error: any) {
-    console.error("error: ", error);
+    dbLogger("error", "insert", "signout", "UncaughtError:", error.message);
     return {
       fatal: true,
       msg: error.message,
@@ -96,7 +100,7 @@ const handleSignOut = async (): Promise<AuthErrorMessage | null> => {
 const retrieveSession = async (): Promise<Session | null> => {
   const { data, error } = await supabase.auth.getSession();
   if (error) {
-    console.error("Error when retrieving user session:", error);
+    dbLogger("error", "select", "retrieve_session", error.message);
   }
   return data.session;
 };
@@ -104,7 +108,7 @@ const retrieveSession = async (): Promise<Session | null> => {
 const refreshSession = async () => {
   const { data, error } = await supabase.auth.refreshSession();
   if (error) {
-    console.error("Error when refreshing user session:", error);
+    dbLogger("error", "select", "refresh_session", error.message);
   }
   return data.session;
 };
